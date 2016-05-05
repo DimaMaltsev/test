@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>LOG</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<style>
+		.row:nth-child(odd) {
+			background: #eee;
+		}
+
+		.caption{
+			font-size: 10px;
+		}
+
+		.details{
+			font-size: 10px;
+		}
+	</style>
+  </head>
+  <body>
+  	<div id="messages"></div>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+		var socket = io();
+
+		socket.emit('authorize', 'log');
+
+		function addLogEntry(event, time, details) {
+			var captionLabel = $('<div class="caption col-md-2 text-center">').text(event);
+			var timeLabel = $('<div class="caption col-md-2 text-center">').text(time);
+			var detailsLabel = $('<div class="details col-md-6">').text(details);
+
+			var entry = $('<div class="row">').append(captionLabel).append(timeLabel).append(detailsLabel);
+
+			$('#messages').append(entry);
+		}
+
+		socket.on('log_init', function (log) {
+			log.forEach(function(entry) {
+				addLogEntry(entry.event, entry.time, entry.details);
+			});
+		});
+		socket.on('log_update', function (entry) {
+			addLogEntry(entry.event, entry.time, entry.details);
+		});
+    </script>
+  </body>
+</html>

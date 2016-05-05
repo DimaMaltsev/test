@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+	<head>
+		<title>INDEX</title>
+	</head>
+	<body>
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+		<script>
+			var socket = io();
+			socket.emit('authorize');
+
+			socket.on('rpc', function (message) {
+				console.log(message);
+			});
+
+			socket.on('connected_to_server', function (clientId) {
+				console.log('connected to server');
+			});
+
+			socket.on('disconnect', function (clientId) {
+				console.log('disconnected from server');
+			});
+		</script>
+	</body>
+</html>
